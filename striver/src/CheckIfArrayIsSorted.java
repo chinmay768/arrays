@@ -1,5 +1,7 @@
 public class CheckIfArrayIsSorted {
 
+    //TC: O(2N)
+    //SC: O(N)
     public static boolean checkSorted(int[] nums){
         int len = nums.length;
         if(len == 1) return true;
