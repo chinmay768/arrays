@@ -26,3 +26,4 @@ public class CheckIfArrayIsSorted {
         System.out.println(checkSorted(arr));
     }
 }
+
