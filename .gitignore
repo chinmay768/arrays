@@ -8,6 +8,7 @@
 *.ear
 *.nar
 hs_err_pid*
+replay_pid*
 
 ##############################
 ## Maven
@@ -67,7 +68,6 @@ local.properties
 nbproject/private/
 build/
 nbbuild/
-nbbuild/
 dist/
 nbdist/
 nbactions.xml
@@ -83,3 +83,8 @@ nb-configuration.xml
 ## OS X
 ##############################
 .DS_Store
+
+##############################
+## Miscellaneous
+##############################
+*.log
