@@ -27,10 +27,13 @@ public class SubarraySumEqualsK {
         for (int i = 0; i < nums.length; i++){
             sum += nums[i];
 
-            map.put(sum, map.getOrDefault(sum, 0) + 1);
             if(map.containsKey(sum - k)){
                 count += map.get(sum - k);
             }
+
+            // This line should be at the bottom
+            // To handle case k = 0
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
         }
 
         return count;
@@ -38,6 +41,6 @@ public class SubarraySumEqualsK {
 
     public static void main(String[] args) {
         int[] arr = {1,2,3};
-        System.out.println(subarraySumOptimal(arr, 3));
+        System.out.println(subarraySumOptimal(arr, 0 ));
     }
 }
