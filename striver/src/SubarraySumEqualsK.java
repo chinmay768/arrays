@@ -42,5 +42,6 @@ public class SubarraySumEqualsK {
     public static void main(String[] args) {
         int[] arr = {1,2,3};
         System.out.println(subarraySumOptimal(arr, 0 ));
+
     }
 }
