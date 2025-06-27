@@ -1,6 +1,6 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StreamAPI {
 
@@ -101,7 +101,40 @@ public class StreamAPI {
         Double avgAge = list.stream().mapToInt(emp -> emp.getAge()).average().getAsDouble(); // average returns OptionalDouble
 
 
+        LocalDate cutoffDate = LocalDate.of(2015, 6, 1);
+        // Find Employees who have joined after 2015-06-01
+        List<Employee> filteredEmployees = list.stream()
+                .filter(emp -> emp.getJoiningDate().isAfter(cutoffDate))
+                .collect(Collectors.toList());
 
+        // Peek  It is just an intermediate oprtn which doesn't modify the actual stream data
+        List<Employee> empDetails = list.stream().peek(System.out::println).filter(elm -> elm.salary > 2000).toList();
+
+        // Find employee names whose age is greater than 25
+        List<String> empNames = list.stream().filter(emp -> emp.age > 25).map(Employee::getName).collect(Collectors.toList());
+
+        // Unique City
+        List<String> dept = list.stream().map(emp -> emp.getCity()).distinct().toList();
+        Set<String> dept2 = list.stream().map(emp -> emp.getCity()).collect(Collectors.toSet());
+
+        // Collect employee Ids and their salaries as map
+        Map<String, Double> res = list.stream().collect(Collectors.toMap(Employee::getName, Employee::getSalary));
+
+        // get avg salary of each dept
+        Map<String, Double> res2 = list.stream().collect(Collectors.groupingBy(
+                Employee::getCity,
+                Collectors.averagingDouble(Employee::getSalary)
+        ));
+
+
+        // Get count of employees city wise
+        Map<String, Long> countOfEmpCitywise = list.stream().collect(Collectors.groupingBy(
+                Employee::getCity,
+                Collectors.counting()
+        ));
+
+        // get all emp salary sum
+        Double sum = list.stream().collect(Collectors.summingDouble(Employee::getSalary));
     }
 }
 
