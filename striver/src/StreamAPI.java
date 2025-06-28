@@ -1,6 +1,9 @@
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class StreamAPI {
 
@@ -135,6 +138,117 @@ public class StreamAPI {
 
         // get all emp salary sum
         Double sum = list.stream().collect(Collectors.summingDouble(Employee::getSalary));
+    }
+
+    public void streamQues( ){
+        String s = "I am learning java streams";
+        int[] arr = {1, 2, 3, 4, 5};
+        // Given a sentence, find the word that has the highest length
+         String maxLenStr = Arrays.stream(s.split(" ")).max(Comparator.comparing(String::length)).get();
+
+        // Remove duplicates and reurn in same order S = "dabcadefg"  -> S = "dabcefg"
+        Arrays.stream(s.split("")).distinct().collect(Collectors.joining());
+
+        //Find the word that has the second highest length
+        String str1 = Arrays.stream(s.split(" ")).sorted(Comparator.comparing(String::length).reversed()).skip(1).findFirst().get();
+
+        str1 =  Arrays.stream(s.split(" ")).sorted((w1, w2) -> Integer.compare(w2.length(), w1.length())).skip(1).findFirst().get();
+
+        // Find the 2nd highest length word in the given sentence
+        int len = Arrays.stream(s.split(" ")).map(word -> word.length()).sorted(Comparator.reverseOrder()).skip(1).findFirst().get();
+
+        // Given a sentence, find the occurrence of each word
+        Map<String, Long> wordFrequency = Arrays.stream(s.trim()
+                        .replaceAll("[^a-zA-Z0-9\\s]", "")//remove punctuation using regex
+                        .split("\\s+"))// removing extra space
+                .map(String::toLowerCase)// converting to lowerCase
+                .collect(Collectors.groupingBy(w -> w, Collectors.counting()));
+
+        wordFrequency = Arrays.stream(s.split(" ")).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        // Given a sentence, find the words with a specified number of vowels
+        List<String> words = Arrays.stream(s.split(" ")).filter(x -> x.replaceAll("[^aeiouAEIOU]", "").length() == 2).collect(Collectors.toList());
+
+        //Divide given integer list into lists of even and odd numbers
+        List<Integer> list = Arrays.stream(arr).boxed().collect(Collectors.toList());
+        Map<Boolean, List<Integer>> map = list.stream().collect(Collectors.groupingBy(x -> x % 2 == 0, Collectors.toList()));
+
+        List<List<Integer>> list2 = list.stream().collect(Collectors.groupingBy(x -> x % 2 == 0, Collectors.toList())).entrySet().stream()
+                .map(x -> x.getValue()).collect(Collectors.toList());
+
+        map = Arrays.stream(arr).boxed().collect(Collectors.partitioningBy(i -> i%2 == 1));
+        //System.out.println("Odd numbers: " + map.get(true));   // [1, 3, 5]
+        //System.out.println("Even numbers: " + map.get(false)); // [2, 4]
+
+        // Convert arrayToList
+        int[] arr2 = list.stream().mapToInt(Integer::intValue).toArray();
+
+        //  Given a word, find the occurrence of each character
+        String str = "omprogramming";
+        Map<String, Long> charOccurence = Arrays.stream(str.split("")).collect(Collectors.groupingBy(c -> c, Collectors.counting()));
+
+        // Arrange the int[] numbers in Descending/Ascending Order
+        int[] sorted = Arrays.stream(arr).sorted().toArray();
+        int[] sortedDesc = Arrays.stream(arr) // Give IntStream
+                .boxed() // Mandatory to use comparator in sorted() Converts IntStream to Stream<Integer>
+                .sorted(Comparator.reverseOrder()).mapToInt(Integer::intValue).toArray();
+
+
+        // Given an array, find the sum of unique elements
+        int sum = Arrays.stream(arr).distinct().sum();
+
+        //  Given a string, find the first non-repeated character
+        String unique = Arrays.stream(s.split("")).filter(c -> str.indexOf(c) == str.lastIndexOf(c)).findFirst().get();
+
+
+        // Given a string, find the first repeated character
+        Map<Character, Long> charmap = str.chars().mapToObj(c -> (char) c).collect(Collectors.groupingBy(Function.identity(),
+                LinkedHashMap::new, Collectors.counting())); // LinkedHashMap preserves the order of string
+
+        char ans =  charmap.entrySet().stream().filter(m -> m.getValue() > 1).map(m -> m.getKey()).findFirst().get();
+
+        // Alternate soln
+        Set<Character> seen = new HashSet<>();
+
+        Optional<Character> result = str.chars()
+                .mapToObj(c -> (char) c)
+                .filter(c -> !seen.add(c)) // if already present, it's repeated
+                .findFirst();
+
+
+
+        // Given an array of integers, group the numbers by the range
+        Map<Integer, List<Integer>> rangeGroup = Arrays.stream(arr).boxed().collect(Collectors.groupingBy(x -> (x / 10) * 10, Collectors.toList()));
+
+
+        // Given a list of strings, create a list that contains only integers
+        List<String> strList = Arrays.asList("10", "abc", "25", "42", "xyz", "100");
+        List<Integer> integers = strList.stream()
+                .filter(st -> st.matches("-?\\d+")) // regex to allow optional negative sign followed by digits
+                .map(Integer::parseInt).collect(Collectors.toList());
+
+
+        // Find the products of the first two elements in an array
+        int product = Arrays.stream(arr).limit(2).reduce(1, (a, b) -> a * b);
+
+        // Group /Pair anagrams from a list of Strings
+        Map<String, List<String>> anagram = strList.stream().collect(Collectors.groupingBy(
+                x-> Arrays.stream(x.toLowerCase().split("")).sorted().collect(Collectors.joining()),
+                Collectors.toList()
+        ));
+
+
+        // Write a stream program to multiply odd index numbers in an array
+        int product2 = IntStream.range(0, arr.length).filter(i -> i % 2 == 1).map(i -> arr[i]).reduce(1, (a, b) -> a * b);
+
+        // Write a program to multiply 1st and last element, 2nd and 2nd last element etc
+        int[] result2 = IntStream.range(0,  arr.length / 2).map(x -> arr[x] * arr[arr.length - x - 1]).toArray();
+
+        //Write a stream program to move all zero’s to the beginning of array using java streams
+        List<Integer> result3 = Stream.concat(
+                Arrays.stream(arr).boxed().filter(x -> x == 0),        // zeros first
+                Arrays.stream(arr).boxed().filter(x -> x != 0)         // then non-zeros
+        ).collect(Collectors.toList());
     }
 }
 
