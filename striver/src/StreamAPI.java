@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -249,6 +250,113 @@ public class StreamAPI {
                 Arrays.stream(arr).boxed().filter(x -> x == 0),        // zeros first
                 Arrays.stream(arr).boxed().filter(x -> x != 0)         // then non-zeros
         ).collect(Collectors.toList());
+
+
+        // In a given array of integers, return true if it contains distinct values
+        boolean size = list.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting())).values().stream().noneMatch(x -> x > 1);
+        //OR
+        size = Arrays.stream(arr).distinct().count() == arr.length;
+
+
+        //  Given the string[] group the strings based on the middle character
+        Map<Character, List<String>> mapRes = strList.stream().filter(w -> w.length() > 0).collect(Collectors.groupingBy(
+                x -> x.charAt(x.length() / 2),
+                Collectors.toList()
+        ));
+        mapRes.forEach((k, v) -> System.out.println(k + " -> " + v));
+
+        // Note: For performing arithmetic operations primitives are the best
+        //Find the sum of all the elements in a list
+        int sum2 = list.stream().mapToInt(Integer::intValue).sum();
+        // OR
+        sum2 = list.stream().reduce(0, Integer::sum);
+
+
+        //Sort a list of strings in alphabetical order
+        List<String> sortedStrList = strList.stream().sorted().toList();
+
+        // Convert a list of integers to a list of their squares
+        List<Integer> sqList = list.stream().map(x -> x * x).toList();
+
+        //Find and print the distinct odd numbers
+        List<Integer> distinctOdd = list.stream().filter(n -> n % 2 == 0).distinct().toList(); // for Lis<Integer>
+        Arrays.stream(arr).filter(n -> n % 2 == 0).distinct().forEach(System.out::println); // for int[]
+
+        //  Find the union of two lists of integers
+        List<Integer> list3 = Arrays.asList(1, 2, 4,5);
+        List<Integer> union = Stream.concat(list.stream(), list3.stream())
+                .distinct()
+                .collect(Collectors.toList());
+
+
+        // Find the kth smallest element in a list of integers
+        int k = 5;
+        Optional<Integer> kthSmallest = list.stream()
+                .sorted()
+                .skip(k - 1)
+                .findFirst();
+
+        kthSmallest.ifPresentOrElse(
+                val -> System.out.println("The " + k + "rd smallest element is: " + val),
+                () -> System.out.println("List has fewer than " + k + " elements")
+        );
+
+
+        // Remove all non-numeric characters from a list
+//        List<String> list = Arrays.asList("ab12c3", "1b2b3c", "123abc");
+        List<String> digitsOnly = strList.stream().map(st -> st.replaceAll("[^0-9]", "")).toList();
+
+        // Find and print strings containing only digits
+        strList.stream().filter(st -> st.matches("[0-9]+")).forEach(System.out::println);
+
+        //  Convert a list of strings to uppercase
+        List<String> uppercased = strList.stream().map(String::toUpperCase).collect(Collectors.toList());
+
+        // Calculate the average of all the numbers
+        Double avg = list.stream().mapToDouble(x -> x).average().getAsDouble();
+        avg =  Arrays.stream(arr).average().getAsDouble(); // for int[]
+
+        // Find the intersection of two lists
+        List<Integer> ansInersection = list.stream().filter(list3::contains).toList();
+
+
+        // Find the occurrence of domains
+        List<String> emails = Arrays.asList("alice@gmail.com", "bob@yahoo.com", "charlie@gmail.com", "dave@hotmail.com", "eve@yahoo.com");
+
+        Map<String, Long> domainCounts = emails.stream()
+                .map(email -> email.substring(email.indexOf("@") + 1)) // extract domain
+                .collect(Collectors.groupingBy(
+                        domain -> domain,
+                        Collectors.counting()
+                ));
+
+
+        //  Generate the first 10 numbers of the Fibonacci Sequence
+        List<Integer> fibonacci = Stream.iterate(new int[] {0, 1}, f -> new int[] {f[1], f[0] + f[1]}).limit(10).map(f -> f[0]).toList();
+
+
+        // Transflorm emp list ino single sring consisting of all names in upper letters separated b '|' character
+        List<Employee> empList = new ArrayList<>();
+        empList.stream().map(x->x.getName().toUpperCase()).collect(Collectors.joining(" | "));
+
+        //  Group list of strings by their first character and count the number of strings
+        Map<Character, Long> group = strList.stream().collect(Collectors.groupingBy(x -> x.charAt(0), Collectors.counting()));
+
+        // Convert a list to a map
+        Map<String, List<Employee>> employeeMap = empList.stream().collect(Collectors.groupingBy(Employee::getCity, Collectors.toList()));
+
+        // Multiply arra
+        Optional<Integer> mul = list.stream().reduce((a, b) -> a * b);
+        Integer mul2 = list.stream().reduce(1, (a, b) -> a * b);
+
+
+        // Can we reuse stream in Java 8
+        Supplier<Stream<String>> namesStream = () -> strList.stream();
+
+        namesStream.get().forEach(System.out::println);
+        long listSize = namesStream.get().count();
+
+        
     }
 }
 
