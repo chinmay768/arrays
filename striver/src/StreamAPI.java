@@ -356,7 +356,40 @@ public class StreamAPI {
         namesStream.get().forEach(System.out::println);
         long listSize = namesStream.get().count();
 
-        
+
+        //  Convert a list of string to uppercase and then concatenate
+        String strConcat = strList.stream().map(String::toUpperCase).reduce((s1, s2) -> s1 + " " + s2).orElse("");
+
+        // Difference b/w map and flatmap
+
+
+        // Concatenate 2 streams
+        Stream<String> stream1 = Stream.of("Concat1");
+        Stream<String> stream2 = Stream.of("Concat2");
+        Stream.concat(stream1, stream2);
+
+        // BadPractice
+        List<String> results = empList.stream().filter(emp -> emp.getAge() > 20).map(Employee::getName).distinct().sorted().toList();
+
+        // Good Practice
+        List<String> filteredNames = empList.stream().filter(emp -> emp.getAge() > 20).map(Employee::getName).toList();
+        List<String> uniqueNames = filteredNames.stream().distinct().sorted().toList();
+
+
+        // Increase salary by 20%
+        List<Employee> salaryHike = empList.stream().map(emp -> {
+            double increasedSalary = emp.getSalary() * 1.20;
+            emp.setSalary(increasedSalary);
+            return emp;
+        }).toList();
+
+        // Find avg salary of all employees
+        Double avgSalary = empList.stream().mapToDouble(emp -> emp.getSalary()).average().getAsDouble();
+
+        // Lowest salary employee
+        Optional<Employee> lowestSalEmp = empList.stream().min((x1, x2) -> Double.compare(x1.getSalary(), x2.getSalary()));
+
+
     }
 }
 
