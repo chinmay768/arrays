@@ -390,10 +390,105 @@ public class StreamAPI {
         Optional<Employee> lowestSalEmp = empList.stream().min((x1, x2) -> Double.compare(x1.getSalary(), x2.getSalary()));
 
 
+        // Stream methods
+        // 1. stream()
+        // 2. filter()
+        // 3. map()
+        // 4. flatMap()
+        // 5. forEach()
+        // 6. collect()
+        // 7. sorted()
+        // 8. limit()
+        // 9. distinct()
+        // 10. skip()
+        // 11. peek()
+        // 12 count()
+        // 13. allMatch()
+        // 14. anyMatch()
+        // 15. noneMatch()
+        // 16. findFirst()
+        // 17. findAny()
+        // 18. toArray()
+        // 19. of()
+        // 20. concat()
+        // 21. reduce()
+
+
+        // Calculate the avg of male and female employees
+        list.stream().collect(Collectors.groupingBy(Employee::getGender, Collectors.averagingInt(Employee::getAge)));
+
+        // Print the middle character of given string
+        String ch = IntStream.range(0, str.length()).filter(i -> i == str.length() / 2).mapToObj(str::charAt) // Stream<Character>
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+
+
+        // Print distinct numbers which starts with "1" in descending order
+        Arrays.stream(arr).filter(elm -> String.valueOf(elm).startsWith("1")).distinct().boxed().sorted().collect(Collectors.toList());
+
+        // |Print the Employees whose salary filtered and modified
+        empList.stream().filter(emp -> emp.getSalary() > 20000)
+                .peek(emp -> emp.setSalary(emp.getSalary() + 1000))
+                .collect(Collectors.toList());
+
+
+        // Return comparison of a Person object based on first name and then last name
+        List<Employee> soredEmp= empList.stream().sorted(Comparator.comparing(Employee::getSalary).thenComparing(Employee::getAge)).toList();
+
+
+        // Print the count of a particular substring
+        String check = "st";
+        Long ans3 = IntStream.range(0, s.length() - 1).filter(x -> s.substring(x , x + check.length()).equals(check)).count();
+
+
+
+        // Find the department with maximum people
+        Map<String, Long> empMap2 = empList.stream().collect(Collectors.groupingBy(Employee::getCity, Collectors.counting()));
+
+        Optional<Map.Entry<String, Long>> maxCityCount = empMap2.entrySet().stream().max(Map.Entry.comparingByValue());
+
+        maxCityCount.ifPresent(x -> System.out.println(x.getKey()));
+
+
+        // Find the average salary from each department
+        empList.stream().collect(Collectors.groupingBy(Employee::getCity, Collectors.averagingDouble(Employee::getSalary)));
+
+
+
+        //
+//        List<String> result4 = empList.stream()
+//                .sorted(Comparator.comparing((String log) -> log.split(":")[0])
+//                        .thenComparing(log -> log.split(":")[1])
+//                        .thenComparing(log -> log.split(":")[2]))
+//                .map(log -> log.split(":", 4)[3])
+//                .toList();
+
+
+        // Given a string return the character with maximum frequency in the string
+        Optional<Map.Entry<Character, Long>> maxChar = str.chars()
+                .mapToObj(c -> (char) c) // Convert int to Character
+                .collect(Collectors.groupingBy(
+                        Function.identity(), Collectors.counting() // Count occurrences
+                ))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue()); // Find max by count
+
+        maxChar.ifPresent(entry ->
+                System.out.println("Character with max frequency: " + entry.getKey() + " = " + entry.getValue())
+        );
+
+
+        // Convert list of string into map of String and its equivalent length
+        Map<String, Integer> map3 = strList.stream().collect(Collectors.toMap(
+                word -> word,
+                String::length
+        ));
+
+
+        //  Transform one object into another . Transform Employee to EmployeeDTO
+        empList.stream().map(e -> new Employee2(e.getSalary(), e.getAge(), e.getCity(), e.getName())).toList();
     }
 }
-
-
 
 
 
